@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 1</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 40px;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .run { background: #3b82f6; color: white; }
+        .save { background: #10b981; color: white; }
+        .clear { background: #ef4444; color: white; }
+
+        #output {
+            margin-top: 20px;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<a href="../index.html" style="color:white; margin:20px; display:block;">
+    ← Back to menu
+</a>
+<h1>Laboratory Work #1</h1>
+
+<input type="number" id="count" placeholder="Enter count of numbers">
+
+<button class="run" onclick="run()">Run</button>
+<button class="save" onclick="save()">Save</button>
+<button class="clear" onclick="clearOutput()">Clear</button>
+
+<div id="output"></div>
+
+<script src="lab1.js"></script>
+
+</body>
+</html>

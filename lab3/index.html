@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratory Work #3</title>
+    <style>
+        body {
+            margin: 0;
+            background: #08152f;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            min-height: 100vh;
+            padding-top: 40px;
+        }
+
+        a.back {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 60%;
+            padding: 12px;
+            margin: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #2f80ed;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1c60b8;
+        }
+
+        #output {
+            width: 90%;
+            height: 220px;
+            margin-top: 20px;
+            background: #1a2742;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            resize: none;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="back">← Back to menu</a>
+
+    <h1>Laboratory Work #3</h1>
+
+    <div class="container">
+        <input type="text" id="passwordInput" placeholder="Enter password phrase"><br>
+        <input type="file" id="fileInput"><br>
+
+        <button onclick="encryptFile()">Encrypt</button>
+        <button onclick="decryptFile()">Decrypt</button>
+        <button onclick="saveResult()">Save</button>
+        <button onclick="clearAll()">Clear</button>
+
+        <br>
+        <textarea id="output" readonly placeholder="Program output..."></textarea>
+    </div>
+
+    <script src="md5.js"></script>
+    <script src="lab3.js"></script>
+</body>
+</html>

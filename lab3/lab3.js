@@ -11,7 +11,7 @@ const MASK = 65535;
 const P = 0xB7E1;
 const Q = 0x9E37;
 
-function encryptFile() {
+async function encryptFile() {
     const password = document.getElementById("passwordInput").value.trim();
     const file = document.getElementById("fileInput").files[0];
     const output = document.getElementById("output");
@@ -21,47 +21,43 @@ function encryptFile() {
         return;
     }
 
-    const reader = new FileReader();
+    try {
+        const buffer = await file.arrayBuffer();
+        const fileBytes = new Uint8Array(buffer);
 
-    reader.onload = function (event) {
-        try {
-            const fileBytes = new Uint8Array(event.target.result);
-            const keyBytes = hexStringToBytes(md5FromString(password));
-            const S = generateS(keyBytes);
+        const keyBytes = hexStringToBytes(md5FromString(password));
+        const S = generateS(keyBytes);
 
-            const rawIv = new Uint8Array(4);
-            window.crypto.getRandomValues(rawIv);
+        const rawIv = new Uint8Array(4);
+        window.crypto.getRandomValues(rawIv);
 
-            const [encIvA, encIvB] = encryptBlock(
-                rawIv[0] | (rawIv[1] << 8),
-                rawIv[2] | (rawIv[3] << 8),
-                S
-            );
+        const [encIvA, encIvB] = encryptBlock(
+            rawIv[0] | (rawIv[1] << 8),
+            rawIv[2] | (rawIv[3] << 8),
+            S
+        );
 
-            const encryptedIvBlock = new Uint8Array([
-                encIvA & 0xFF, encIvA >> 8,
-                encIvB & 0xFF, encIvB >> 8
-            ]);
+        const encryptedIvBlock = new Uint8Array([
+            encIvA & 0xFF, encIvA >> 8,
+            encIvB & 0xFF, encIvB >> 8
+        ]);
 
-            const paddedBytes = addPadding(fileBytes, 4);
-            const encryptedData = encryptCBC(paddedBytes, S, rawIv);
+        const paddedBytes = addPadding(fileBytes, 4);
+        const encryptedData = encryptCBC(paddedBytes, S, rawIv);
 
-            const finalBytes = new Uint8Array(encryptedIvBlock.length + encryptedData.length);
-            finalBytes.set(encryptedIvBlock, 0);
-            finalBytes.set(encryptedData, encryptedIvBlock.length);
+        const finalBytes = new Uint8Array(encryptedIvBlock.length + encryptedData.length);
+        finalBytes.set(encryptedIvBlock, 0);
+        finalBytes.set(encryptedData, encryptedIvBlock.length);
 
-            output.value = `Успішно зашифровано.\nIV (ECB) додано на початок.\nРозмір: ${finalBytes.length} байт.`;
-            lastBinaryResult = finalBytes;
-            lastMode = "encrypt";
-        } catch (e) {
-            output.value = "Помилка: " + e.message;
-        }
-    };
-
-    reader.readAsArrayBuffer(file);
+        output.value = `Успішно зашифровано.\nIV (ECB) додано на початок.\nРозмір: ${finalBytes.length} байт.`;
+        lastBinaryResult = finalBytes;
+        lastMode = "encrypt";
+    } catch (e) {
+        output.value = "Помилка: " + e.message;
+    }
 }
 
-function decryptFile() {
+async function decryptFile() {
     const password = document.getElementById("passwordInput").value.trim();
     const file = document.getElementById("fileInput").files[0];
     const output = document.getElementById("output");
@@ -70,42 +66,37 @@ function decryptFile() {
         return;
     }
 
-    const reader = new FileReader();
+    try {
+        const buffer = await file.arrayBuffer();
+        const fileBytes = new Uint8Array(buffer);
 
-    reader.onload = function (event) {
-        try {
-            const fileBytes = new Uint8Array(event.target.result);
-
-            if (fileBytes.length < 8) {
-                throw new Error("Файл занадто малий.");
-            }
-
-            const S = generateS(hexStringToBytes(md5FromString(password)));
-
-            const [rawIvA, rawIvB] = decryptBlock(
-                fileBytes[0] | (fileBytes[1] << 8),
-                fileBytes[2] | (fileBytes[3] << 8),
-                S
-            );
-
-            const rawIv = new Uint8Array([
-                rawIvA & 0xFF, rawIvA >> 8,
-                rawIvB & 0xFF, rawIvB >> 8
-            ]);
-
-            const encryptedData = fileBytes.slice(4);
-            const decryptedPadded = decryptCBC(encryptedData, S, rawIv);
-            const finalBytes = removePadding(decryptedPadded);
-
-            output.value = `Успішно дешифровано за ТЗ.\nРозмір: ${finalBytes.length} байт.`;
-            lastBinaryResult = finalBytes;
-            lastMode = "decrypt";
-        } catch (e) {
-            output.value = "Помилка: " + e.message;
+        if (fileBytes.length < 8) {
+            throw new Error("Файл занадто малий.");
         }
-    };
 
-    reader.readAsArrayBuffer(file);
+        const S = generateS(hexStringToBytes(md5FromString(password)));
+
+        const [rawIvA, rawIvB] = decryptBlock(
+            fileBytes[0] | (fileBytes[1] << 8),
+            fileBytes[2] | (fileBytes[3] << 8),
+            S
+        );
+
+        const rawIv = new Uint8Array([
+            rawIvA & 0xFF, rawIvA >> 8,
+            rawIvB & 0xFF, rawIvB >> 8
+        ]);
+
+        const encryptedData = fileBytes.slice(4);
+        const decryptedPadded = decryptCBC(encryptedData, S, rawIv);
+        const finalBytes = removePadding(decryptedPadded);
+
+        output.value = `Успішно дешифровано за ТЗ.\nРозмір: ${finalBytes.length} байт.`;
+        lastBinaryResult = finalBytes;
+        lastMode = "decrypt";
+    } catch (e) {
+        output.value = "Помилка: " + e.message;
+    }
 }
 
 function rotl(x, y) {
@@ -251,8 +242,7 @@ function hexStringToBytes(hex) {
     const result = [];
 
     for (let i = 0; i < hex.length; i += 2) {
-        result.push(parseInt(hex.substr(i, 2), 16));
-    }
+    result.push(Number.parseInt(hex.substr(i, 2), 16));    }
 
     return result;
 }

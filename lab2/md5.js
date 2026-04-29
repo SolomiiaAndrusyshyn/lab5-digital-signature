@@ -9,7 +9,7 @@ function stringToBytes(text) {
 
     const bytes = [];
     for (let i = 0; i < text.length; i++) {
-        bytes.push(text.charCodeAt(i) & 0xff);
+        bytes.push(text.codePointAt(i) & 0xff);
     }
     return new Uint8Array(bytes);
 }

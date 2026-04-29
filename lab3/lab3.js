@@ -29,7 +29,7 @@ async function encryptFile() {
         const S = generateS(keyBytes);
 
         const rawIv = new Uint8Array(4);
-        window.crypto.getRandomValues(rawIv);
+        globalThis.crypto.getRandomValues(rawIv);
 
         const [encIvA, encIvB] = encryptBlock(
             rawIv[0] | (rawIv[1] << 8),

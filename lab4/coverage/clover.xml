@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1776892057225" clover="3.2.0">
-  <project timestamp="1776892057225" name="All files">
+<coverage generated="1777534951522" clover="3.2.0">
+  <project timestamp="1777534951522" name="All files">
     <metrics statements="224" coveredstatements="217" conditionals="35" coveredconditionals="30" methods="25" coveredmethods="25" elements="284" coveredelements="272" complexity="0" loc="224" ncloc="224" packages="1" files="1" classes="1"/>
     <file name="lab4.js" path="C:\Users\Соломія\Desktop\labs\lab4\lab4.js">
       <metrics statements="224" coveredstatements="217" conditionals="35" coveredconditionals="30" methods="25" coveredmethods="25"/>
